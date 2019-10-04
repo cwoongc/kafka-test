@@ -132,6 +132,24 @@ public class KafkaCommitTestApplication {
         };
     }
 
+    @Profile({"C1ForRebalancing"})
+    @Bean
+    public CommandLineRunner runC1ForRebalancingTest() {
+        return args -> {
+            Consumer1ForRebalancingTest c1 = new Consumer1ForRebalancingTest(consumerConfig);
+            c1.start(kafkaTopic);
+        };
+    }
+
+    @Profile({"C2ForRebalancing"})
+    @Bean
+    public CommandLineRunner runC2ForRebalancingTest() {
+        return args -> {
+            Consumer2ForRebalancingTest c2 = new Consumer2ForRebalancingTest(consumerConfig);
+            c2.start(kafkaTopic);
+        };
+    }
+
 
 
     @Profile({"big-decimal"})

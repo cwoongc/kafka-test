@@ -35,7 +35,7 @@ public class KafkaConfiguration {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         //카프카에 본컨슈머의 offset이 expire되거나/커밋된게 하니도없거나 해서 없을경우 맨앞에서 부터 읽어올까, 지금부터 들어오는것부터 읽을까 선택
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, EARLIEST);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, LATEST);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, DESERIALIZER);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, DESERIALIZER);
 
