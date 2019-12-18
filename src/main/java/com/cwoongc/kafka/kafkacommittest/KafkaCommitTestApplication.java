@@ -131,6 +131,19 @@ public class KafkaCommitTestApplication {
     }
 
 
+    @Profile({"P-WithdrawalPendingApproval"})
+    @Bean
+    public CommandLineRunner runProducerGeneratedTxWithdrawalPendingApproval() {
+        return args -> {
+
+            ProducerGeneratedTxWithdrawalPendingApproval producer = new ProducerGeneratedTxWithdrawalPendingApproval(secureProducerConfig);
+            producer.start(kafkaTopic);
+        };
+    }
+
+
+
+
 
     @Profile({"B"})
     @Bean
