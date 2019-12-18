@@ -1,50 +1,52 @@
 package com.cwoongc.kafka.kafkacommittest.consumer;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 
 import java.util.Collections;
 import java.util.Properties;
 
 @Slf4j
-public class ConsumerB {
+public class ConsumerGeneratedTxCommitter {
 
-    private final Properties consumerConfig;
+    private final Properties  secureConsumerConfig;
 
-    public ConsumerB(Properties consumerConfig) {
-        this.consumerConfig = consumerConfig;
+    public ConsumerGeneratedTxCommitter(Properties consumerConfig) {
+        this.secureConsumerConfig = consumerConfig;
     }
 
-    public void start(TopicPartition topicPartition) {
+    public void start(TopicPartition topicPartition, Long commitUntil) {
 
-        KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(consumerConfig);
-
-        kafkaConsumer.subscribe(Collections.singletonList(topicPartition.topic()));
+        KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(secureConsumerConfig);
 
 //        kafkaConsumer.assign(Collections.singletonList(topicPartition));
+        kafkaConsumer.subscribe(Collections.singletonList(topicPartition.topic()));
 
         while(true) {
             ConsumerRecords<String, String> consumerRecords = kafkaConsumer.poll(100);
             for(ConsumerRecord<String, String> consumerRecord : consumerRecords) {
                 long offset = consumerRecord.offset();
 
-                log.info("[B] Topic: {}, Partitions: {}, Offset: {}, HeaderKey1: {}, header-eliKafkaHeader: {},  header-contentType: {}, header-spring_json_header_types: {}, Key: {}, Value: {}, Last Committed Offset: {}",
+                log.info("[A] Topic: {}, Partitions: {}, Offset: {}, Key: {}, Value: {}, Last Committed Offset: {}",
                         consumerRecord.topic(),
                         consumerRecord.partition(),
                         offset,
-                        consumerRecord.headers().lastHeader("eliKafkaHeader").key(),
-                        new String(consumerRecord.headers().lastHeader("eliKafkaHeader").value()),
-                        new String(consumerRecord.headers().lastHeader("contentType").value()),
-                        new String(consumerRecord.headers().lastHeader("spring_json_header_types").value()),
                         consumerRecord.key(),
                         consumerRecord.value(),
                         kafkaConsumer.committed(topicPartition)
                 );
 
+                if(offset <= commitUntil) {
+                    kafkaConsumer.commitSync(Collections.singletonMap(
+                            topicPartition, new OffsetAndMetadata(offset + 1)
+                    ));
+                    log.info("[A} Committed offset : {}", offset + 1);
+
+                }
             }
         }
 

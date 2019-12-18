@@ -1,8 +1,7 @@
 package com.cwoongc.kafka.kafkacommittest;
 
 import com.cwoongc.kafka.kafkacommittest.consumer.*;
-import com.cwoongc.kafka.kafkacommittest.producer.ProducerP;
-import com.cwoongc.kafka.kafkacommittest.producer.ProducerPublish;
+import com.cwoongc.kafka.kafkacommittest.producer.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -46,6 +45,15 @@ public class KafkaCommitTestApplication {
     @Autowired
     private Properties producerConfig;
 
+
+    @Autowired
+    private Properties secureConsumerConfig;
+
+    @Autowired
+    private Properties secureProducerConfig;
+
+
+
     @Value("${kafka.topic}")
     private String kafkaTopic;
 
@@ -71,6 +79,59 @@ public class KafkaCommitTestApplication {
         };
     }
 
+    @Profile({"C-GeneratedTxCommitter"})
+    @Bean
+    public CommandLineRunner runGeneratedTxConsumer() {
+        return args -> {
+
+            ConsumerGeneratedTxCommitter consumer = new ConsumerGeneratedTxCommitter(secureConsumerConfig);
+            TopicPartition topicPartition = new TopicPartition(kafkaTopic, 0);
+            consumer.start(topicPartition, 1000000L);
+        };
+    }
+
+    @Profile({"P-DeployAccountCreated"})
+    @Bean
+    public CommandLineRunner runProducerGeneratedTxDeployAccountCreated() {
+        return args -> {
+
+            ProducerGeneratedTxDeployAccountCreated producer = new ProducerGeneratedTxDeployAccountCreated(secureProducerConfig);
+            producer.start(kafkaTopic);
+        };
+    }
+
+    @Profile({"P-DeployAccountFailed"})
+    @Bean
+    public CommandLineRunner runProducerGeneratedTxDeployAccountFailed() {
+        return args -> {
+
+            ProducerGeneratedTxDeployAccountFailed producer = new ProducerGeneratedTxDeployAccountFailed(secureProducerConfig);
+            producer.start(kafkaTopic);
+        };
+    }
+
+    @Profile({"P-DeployAccountBroadcasted"})
+    @Bean
+    public CommandLineRunner runProducerGeneratedTxDeployAccountBroadcasted() {
+        return args -> {
+
+            ProducerGeneratedTxDeployAccountBroadcasted producer = new ProducerGeneratedTxDeployAccountBroadcasted(secureProducerConfig);
+            producer.start(kafkaTopic);
+        };
+    }
+
+    @Profile({"P-WithdrawalCreated"})
+    @Bean
+    public CommandLineRunner runProducerGeneratedTxWithdrawalCreated() {
+        return args -> {
+
+            ProducerGeneratedTxWithdrawalCreated producer = new ProducerGeneratedTxWithdrawalCreated(secureProducerConfig);
+            producer.start(kafkaTopic);
+        };
+    }
+
+
+
     @Profile({"B"})
     @Bean
     public CommandLineRunner runConsumerB() {
@@ -80,6 +141,21 @@ public class KafkaCommitTestApplication {
             consumerB.start(topicPartition);
         };
     }
+
+    @Profile({"eli-generatedtx-v1"})
+    @Bean
+    public CommandLineRunner runConsumerEliGeneratedTx() {
+        return args -> {
+            ConsumerB consumerB = new ConsumerB(secureConsumerConfig);
+            TopicPartition topicPartition = new TopicPartition(kafkaTopic, 0);
+            consumerB.start(topicPartition);
+        };
+    }
+
+
+
+
+
 
     @Profile({"seek"})
     @Bean

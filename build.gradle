@@ -29,7 +29,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
 
-    compile('org.apache.kafka:kafka-clients:0.11.0.2')
+//    compile('org.apache.kafka:kafka-clients:0.11.0.2')
+    compile('org.apache.kafka:kafka-clients:2.0.1')
     compile('com.fasterxml.jackson.core:jackson-databind:2.8.6')
     compile('com.fasterxml.jackson.module:jackson-module-afterburner:2.7.1')
 }
