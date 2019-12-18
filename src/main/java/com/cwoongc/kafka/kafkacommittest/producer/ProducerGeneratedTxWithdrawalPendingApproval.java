@@ -44,6 +44,7 @@ public class ProducerGeneratedTxWithdrawalPendingApproval {
                 .requestId("2000444888589")
                 .organizationId("orgO")
                 .walletId("walletW")
+                .coinCode("ETH")
                 .build();
 
         ProducerRecord<String, String> producerRecord = new ProducerRecord<String,String>(

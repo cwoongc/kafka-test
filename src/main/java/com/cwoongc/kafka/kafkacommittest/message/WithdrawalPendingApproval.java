@@ -19,4 +19,6 @@ public class WithdrawalPendingApproval {
     private String organizationId;
     private String walletId;
 
+    private String coinCode;
+
 }
