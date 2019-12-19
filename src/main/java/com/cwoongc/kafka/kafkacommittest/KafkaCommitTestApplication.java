@@ -141,6 +141,25 @@ public class KafkaCommitTestApplication {
         };
     }
 
+    @Profile({"P-WithdrawalApproved"})
+    @Bean
+    public CommandLineRunner runProducerGeneratedTxWithdrawalApproved() {
+        return args -> {
+
+            ProducerGeneratedTxWithdrawalApproved producer = new ProducerGeneratedTxWithdrawalApproved(secureProducerConfig);
+            producer.start(kafkaTopic);
+        };
+    }
+
+    @Profile({"P-WithdrawalRejected"})
+    @Bean
+    public CommandLineRunner runProducerGeneratedTxWithdrawalRejected() {
+        return args -> {
+
+            ProducerGeneratedTxWithdrawalRejected producer = new ProducerGeneratedTxWithdrawalRejected(secureProducerConfig);
+            producer.start(kafkaTopic);
+        };
+    }
 
 
 
